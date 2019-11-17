@@ -27,6 +27,13 @@
       <el-form-item label="头像">
         <el-image :src="url" style="width: 100px"></el-image>
       </el-form-item>
+      <el-form-item label="图片展示">
+        <ul style="list-style: none">
+          <li v-for="item in editForm.imgList" :key="item.id" style="float: left">
+            <img :src="item.url" width="100px" height="120px"/>
+          </li>
+        </ul>
+      </el-form-item>
       <el-form-item label="上传文件">
         <el-upload action="/ditto/api/upload"
                    :show-file-list="false"
@@ -38,20 +45,12 @@
           <el-button type="primary" size="medium">点击上传</el-button>
         </el-upload>
       </el-form-item>
-      <!--
-        action: 图片上传的地址
-        show-file-list: 是否显示文件上传列表
-        accept: 可接受的上传类型，image/*为图片
-        headers: 头部信息
-        on-success: 上传成功事件
-        on-error: 上传失败事件
-        before-upload: 上传前处理事件，返回一个值，值为false将阻止上传
-        on-progress: 上传中事件
-  -->
       <el-form-item>
         <el-button size="small" type="primary" @click="sendData">确定</el-button>
         <el-button size="small" type="primary" @click="cancel">取消</el-button>
         <el-button size="small" type="primary" @click="preImg">预览</el-button>
+        <el-button size="small" type="primary" @click="addImg">添加图片</el-button>
+        <el-button size="small" type="primary" @click="removeImg">删除图片</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -63,7 +62,12 @@
     components: {ElImageViewer},
     data(){
       return {
-        editForm:{},
+        editForm:{
+          imgList:[
+            { id : 1 ,type : 0 ,price : 170 ,url : '/static/banner/1.jpg' ,name : 'vip/年'},
+            { id : 2 ,type : 0 ,price : 160 ,url : '/static/banner/2.jpg' ,name : 'vip/年'}
+          ]
+        },
         showTable: true,
         showImg: false,
         url: '/static/banner/1.jpg',
@@ -91,7 +95,7 @@
               picker.$emit('pick', date);
             }
           }]
-        },
+        }
       }
     },
     methods: {
@@ -110,6 +114,15 @@
       },
       preImg:function () {
         this.showImg = true;
+      },
+      addImg:function () {
+        let imgInfo = { id : 3 ,type : 0 ,price : 160 ,url : '/static/banner/3.jpg' ,name : 'vip/年'}
+        this.editForm.imgList.unshift(imgInfo)
+        console.log(this.editForm.imgList);
+      },
+      removeImg:function () {
+        this.editForm.imgList.shift();
+        console.log(this.editForm.imgList);
       },
       closeViewer: function () {
         this.showImg = false;
